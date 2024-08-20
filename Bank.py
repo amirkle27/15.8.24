@@ -53,14 +53,16 @@ def bank ():
         if operation.lower() == "n":
             print("Starting a new account creation process:")
             new_account_number: int = int(max(bank_accounts.keys())+1)
-            new_account = dict.fromkeys(sample_account.keys())
-            new_account ["first_name"] = input("First Name: ")
-            new_account ["last_name"] = input("Last Name: ")
-            new_account ["id_number"] = input("ID_Number: ")
-            new_account ["balance"] = float(input("Balance: "))
-            new_account ["transactions_to_execute"] = []
-            new_account ["transaction_history"] = []
-            bank_accounts[new_account_number] = new_account
+            new_account = sample_account.copy()
+            new_account.update({
+            "first_name" :  input("First Name: "),
+            "last_name" : input("Last Name: "),
+            "id_number" : input("ID_Number: "),
+            "balance" : float(input("Balance: ")),
+            "transactions_to_execute" : [],
+            "transaction_history" : [],
+            })
+            
             print(f"New Account created successfully!\nAccount Number: {new_account_number}\nAccount Details: {bank_accounts[new_account_number]}")
         elif operation.lower() == "e":
             account_number: int = int(input(f"Which account number would you like to perform actions for?\n Available accounts are:\n {list(bank_accounts.keys())}"))
@@ -87,9 +89,9 @@ def bank ():
                         trans_to_execute = (tuple(trans_to_execute))
                         bank_accounts [account_number]["transaction_history"].append(trans_to_execute)
                         trans_amount = trans_to_execute [3]
-                        bank_accounts[account_number]["balance"] -= trans_amount
+                        bank_accounts[account_number].update({"balance": bank_accounts [account_number] ["balance"] - trans_amount})
                         des_account = bank_accounts[account_number]["transactions_to_execute"][trans_index][2]
-                        bank_accounts[des_account]["balance"] += trans_amount
+                        bank_accounts[des_account].update({"balance": bank_accounts[des_account]["balance"] + trans_amount})
                         del (bank_accounts[account_number]["transactions_to_execute"][trans_index])
                     except:
                         print("Out of range. Please try again")
@@ -100,4 +102,3 @@ def bank ():
     print(bank_accounts)
 
 print(bank())
-
